@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Reddit;
+using Reddit.Repositories;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,8 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
         .AllowAnyOrigin()
         .AllowAnyHeader()
         .AllowAnyMethod()));
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 

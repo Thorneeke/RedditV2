@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Reddit;
 using Reddit.Dtos;
 using Reddit.Models;
+using Reddit.Repositories;
 
 namespace Reddit.Controllers
 {
@@ -16,17 +17,26 @@ namespace Reddit.Controllers
     public class UsersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public UsersController(ApplicationDbContext context)
+        public UsersController(ApplicationDbContext context, IUserRepository userRepository)
         {
             _context = context;
+            _userRepository = userRepository;
         }
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<PagedList<User>> GetUsers
+            (
+            int pageNumber = 1,
+            int pageSize = 2,
+            string searchKey = null,
+            string? sortKey = null,
+            bool isAscending = true
+            )
         {
-            return await _context.Users.ToListAsync();
+            return await _userRepository.GetUsers(pageNumber, pageSize, searchKey, sortKey, isAscending);
         }
 
         // GET: api/Users/5
